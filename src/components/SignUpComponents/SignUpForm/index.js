@@ -2,27 +2,27 @@ import React, { useState } from 'react'
 import InputComponent from '../../common/Input';
 import Button from '../../common/Button';
 import { auth, db, storage} from "../../../firebase"
-import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword
-} from "firebase/auth"
+import {createUserWithEmailAndPassword} from "firebase/auth"
 import { doc, setDoc } from 'firebase/firestore';
 import { useDispatch } from 'react-redux';
 import { setUser } from "../../../slices/userSlice"
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function SignUpForm() {
 const [fullName,setFullName] = useState("");
   const [email,setEmail] = useState("");
   const [password,setpassword] = useState("");
   const [confirmPassword,setConfirmPassword] = useState("");
+  const [loading,setLoading] = useState(false)
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const handleSignUp = async ()=>{
     console.log("Handling Signup");
-    if(password==confirmPassword && password.length>=6){
+    setLoading(true);
+    if(password==confirmPassword && password.length>=6 && fullName && email){
       try {
         //Creating users account
         const userCredential = await createUserWithEmailAndPassword(
@@ -49,12 +49,21 @@ const [fullName,setFullName] = useState("");
           uid : user.uid
         }));
 
+        toast.success("User has been Created")
+        setLoading(false);
         navigate("/profile");
       }catch(e){
         console.log("error", e);
+        toast.error(e.message);
+        setLoading(false);
       }
     }else{
-
+      if(password!=confirmPassword){
+        toast.error("Password Doesn't Match")
+      }else if(password.length<6){
+        toast.error("Password should atleast contain 6 Characters")
+      }
+      setLoading(false);
     }
     
   };
@@ -88,7 +97,7 @@ const [fullName,setFullName] = useState("");
     type="password"
     required={true}
   />
-  <Button text={"Sign Up"} onClick={handleSignUp}/>
+  <Button text={loading ? "Loading.." : "Sign Up"} disabled={loading} onClick={handleSignUp}/>
   </>
   )
 }

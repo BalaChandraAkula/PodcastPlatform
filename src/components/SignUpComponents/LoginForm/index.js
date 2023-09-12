@@ -7,19 +7,22 @@ import { doc, getDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { setUser } from '../../../slices/userSlice';
 import { useDispatch } from 'react-redux';
+import { toast } from 'react-toastify';
 
 function LogInForm() {
 
   const [email,setEmail] = useState("");
   const [password,setpassword] = useState("");
+  const [loading,setLoading] = useState(false);
 
   const navigate = useNavigate();
   const dispatch = useDispatch()
   
 
   const handleLogin = async ()=>{
-    console.log("Handling Login")
-
+    console.log("Handling Login");
+    setLoading(true);
+    if(email && password){
     try{
       const userCredential = await signInWithEmailAndPassword(
         auth,
@@ -39,15 +42,22 @@ function LogInForm() {
           // profilePic:userData.profilePic
         })
       );
-
+      toast.success("Login Successfull!")
+      setLoading(false);
       // toHaveStyle.success("User Login Successful");
       navigate("/profile")
 
     }catch(e){
       console.log("error", e);
+      setLoading(false);
+      toast.error(e.message)
     }
 
+  }else{
+    toast.error("Fill the Required Fields");
+    setLoading(false);
   }
+}
 
   return (
     <>
@@ -65,7 +75,7 @@ function LogInForm() {
     type="password"
     required={true}
   />
-  <Button text={"Log In"} onClick={handleLogin}/>
+  <Button text={loading ? "Loading.." : "Log In"} disabled={loading} onClick={handleLogin}/>
   </>
   )
 }

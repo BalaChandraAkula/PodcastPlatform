@@ -1,9 +1,9 @@
 import React from 'react' 
 import './styles.css';
 
-function Button({text,onClick}) {
+function Button({text,onClick,disabled}) {
   return (
-    <div className='custom-btn' onClick={onClick}>{text}</div>
+    <div className='custom-btn' disabled={disabled} onClick={onClick}>{text}</div>
   )
 }
 

@@ -1,21 +1,59 @@
-
-import { BrowserRouter as  Router, Route, Routes } from 'react-router-dom';
-import './App.css';
-import SignUpPage from './pages/SignUpPage';
-import Profile from './pages/Profile';
-import { ToastContainer, toast } from 'react-toastify';
-  import 'react-toastify/dist/ReactToastify.css';
-
-
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import "./App.css";
+import SignUpPage from "./pages/SignUpPage";
+import Profile from "./pages/Profile";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useEffect } from "react";
+import { doc, onSnapshot } from "firebase/firestore";
+import { auth, db } from "./firebase";
+import { onAuthStateChanged } from "firebase/auth";
+import { setUser } from "./slices/userSlice";
+import { useDispatch } from "react-redux";
 
 function App() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const unsubscribeSnaphsort = onSnapshot(
+          doc(db, "users", user.uid),
+          (userDoc) => {
+            if (userDoc.exists()) {
+              const userData = userDoc.data();
+              dispatch(
+                setUser({
+                  name: userData.name,
+                  email: userData.email,
+                  uid: user.uid,
+                  profilePic: userData.profilePic,
+                })
+              );
+            }
+          },
+          (error) => {
+            console.log("Error Fetching Data");
+          }
+        );
+        return () => {
+          unsubscribeSnaphsort();
+        };
+      }
+    });
+
+    return () => {
+      unsubscribeAuth();
+    };
+  }, []);
+
   return (
     <div className="App">
-      <ToastContainer/>
+      <ToastContainer />
       <Router>
         <Routes>
-          <Route path='/' element={<SignUpPage/>}/>
-          <Route path='/profile' element={<Profile/>}/>
+          <Route path="/" element={<SignUpPage />} />
+          <Route path="/profile" element={<Profile />} />
 
           {/* <Route path='/podcasts' element={<Podcasts/>}/>
           <Route path='/create-podcast' element={<CreatePodcast/>}/>

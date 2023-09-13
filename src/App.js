@@ -10,6 +10,7 @@ import { auth, db } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import { setUser } from "./slices/userSlice";
 import { useDispatch } from "react-redux";
+import PrivateRoutes from "./components/common/PrivateRoutes";
 
 function App() {
   const dispatch = useDispatch();
@@ -53,7 +54,9 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<SignUpPage />} />
-          <Route path="/profile" element={<Profile />} />
+          <Route element={<PrivateRoutes/>}>
+            <Route path="/profile" element={<Profile />} />
+          </Route>
 
           {/* <Route path='/podcasts' element={<Podcasts/>}/>
           <Route path='/create-podcast' element={<CreatePodcast/>}/>

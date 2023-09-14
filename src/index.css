@@ -20,6 +20,10 @@ body {
 input {
   font-family: "Inter",sans-serif;
 }
+ 
+a{
+  text-decoration: none !important;
+}
 
 .input-wrapper{
   width: 80vw;
@@ -36,4 +40,12 @@ input {
   text-align: center;
   font-weight: 400;
   margin-bottom: 1rem;
+}
+
+.podcasts-flex{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
 }

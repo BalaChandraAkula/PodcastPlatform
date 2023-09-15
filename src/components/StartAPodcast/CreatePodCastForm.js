@@ -90,7 +90,7 @@ function CreatePodCastForm() {
         text={"Display Image Upload"}
       />
       <FileInput
-        accept={"imaege/*"}
+        accept={"image/*"}
         id="banner-image-input"
         fileHandleFnc={bannerImageHandle}
         text={"Banner Image Upload"}

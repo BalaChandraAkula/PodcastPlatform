@@ -5,13 +5,15 @@ import { collection, doc, getDoc, onSnapshot, query } from "firebase/firestore";
 import { auth, db } from "../firebase";
 import { toast } from "react-toastify";
 import Button from "../components/common/Button";
-import EpisodeDetails from "../components/common/Podcasts/EpisodeDetails";
+import EpisodeDetails from "../components/Podcasts/EpisodeDetails";
+import AudioPlayer from "../components/Podcasts/AudioPlayer";
 
 function PodcastDetailsPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [podcast, setPodcast] = useState({});
   const [episodes, setEpisodes] = useState([]);
+  const [playingFile, setPlayingFile] = useState("");
   useEffect(() => {
     if (id) {
       getData();
@@ -98,9 +100,7 @@ function PodcastDetailsPage() {
                       title={episode.title}
                       description={episode.description}
                       audioFile={episode.audioFile}
-                      onClick={(file) => {
-                        console.log("Playing File...");
-                      }}
+                      onClick={(file) => setPlayingFile(file)}
                     />
                   );
                 })}
@@ -111,6 +111,9 @@ function PodcastDetailsPage() {
           </>
         )}
       </div>
+      {playingFile && (
+        <AudioPlayer audioSrc={playingFile} image={podcast.displayImage} />
+      )}
     </div>
   );
 }

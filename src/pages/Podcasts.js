@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { collection, onSnapshot, query } from "firebase/firestore";
 import { db } from "../firebase";
 import { setPodcasts } from "../slices/podcastSlice";
-import PodcastCard from "../components/common/Podcasts/PodcastCard";
+import PodcastCard from "../components/Podcasts/PodcastCard";
 import InputComponent from "../components/common/Input/index";
 
 function PodcastsPage() {
@@ -47,9 +47,10 @@ function PodcastsPage() {
         />
         {filteredPodcasts.length > 0 ? (
           <div className="podcasts-flex" style={{ marginTop: "2rem" }}>
-            {filteredPodcasts.map((item) => {
+            {filteredPodcasts.map((item, index) => {
               return (
                 <PodcastCard
+                  key={index}
                   id={item.id}
                   title={item.title}
                   displayImage={item.displayImage}

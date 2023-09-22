@@ -1,5 +1,5 @@
 import React from "react";
-import Button from "../../Button";
+import Button from "../../common/Button";
 
 function EpisodeDetails({ index, title, description, audioFile, onClick }) {
   return (

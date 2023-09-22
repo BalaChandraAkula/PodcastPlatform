@@ -34,3 +34,7 @@
     filter: hue-rotate(25drg);
     width: 40%;
 }
+
+.audio-btn{
+    cursor: pointer;
+}
